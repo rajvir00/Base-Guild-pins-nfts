@@ -20,7 +20,7 @@ contract ControlStructures {
     }
 
     // Do Not Disturb function
-    function doNotDisturb(uint _time) public pure returns (string memory) {
+    function doNotDisturb(uint _time) public pure returns (string memory response) {
         if (_time >= 2400) {
             // Panic: Out of valid range
             assert(false);
@@ -29,14 +29,14 @@ contract ControlStructures {
         } else if (_time >= 1200 && _time <= 1259) {
             revert("At lunch!");
         } else if (_time >= 800 && _time <= 1199) {
-            return "Morning!";
+            response = "Morning!";
         } else if (_time >= 1300 && _time <= 1799) {
-            return "Afternoon!";
+            response = "Afternoon!";
         } else if (_time >= 1800 && _time <= 2200) {
-            return "Evening!";
+            response = "Evening!";
         } else {
-            // Just in case an unexpected value slips through
-            return "Unknown";
+            response = "Unknown";
         }
+        return response;
     }
 }
