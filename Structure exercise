@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract GarageManager {
+    // Custom error for invalid car index
+    error BadCarIndex(uint index);
+
+    // Struct representing a car
+    struct Car {
+        string make;
+        string model;
+        string color;
+        uint numberOfDoors;
+    }
+
+    // Mapping from user address to their cars
+    mapping(address => Car[]) public garage;
+
+    /**
+     * @notice Add a new car to the caller's garage
+     * @param make The make of the car
+     * @param model The model of the car
+     * @param color The color of the car
+     * @param numberOfDoors The number of doors the car has
+     */
+    function addCar(
+        string memory make,
+        string memory model,
+        string memory color,
+        uint numberOfDoors
+    ) public {
+        Car memory newCar = Car(make, model, color, numberOfDoors);
+        garage[msg.sender].push(newCar);
+    }
+
+    /**
+     * @notice Returns all cars owned by the caller
+     * @return cars An array of Car structs
+     */
+    function getMyCars() public view returns (Car[] memory cars) {
+        return garage[msg.sender];
+    }
+
+    /**
+     * @notice Returns all cars owned by a specific user
+     * @param user The address of the user
+     * @return cars An array of Car structs
+     */
+    function getUserCars(address user) public view returns (Car[] memory cars) {
+        return garage[user];
+    }
+
+    /**
+     * @notice Updates a car in the caller's garage
+     * @param index The index of the car to update
+     * @param make The new make
+     * @param model The new model
+     * @param color The new color
+     * @param numberOfDoors The new number of doors
+     */
+    function updateCar(
+        uint index,
+        string memory make,
+        string memory model,
+        string memory color,
+        uint numberOfDoors
+    ) public {
+        // Revert if index is out of bounds
+        if (index >= garage[msg.sender].length) {
+            revert BadCarIndex(index);
+        }
+
+        garage[msg.sender][index] = Car(make, model, color, numberOfDoors);
+    }
+
+    /**
+     * @notice Deletes all cars owned by the caller
+     */
+    function resetMyGarage() public {
+        delete garage[msg.sender];
+    }
+}
